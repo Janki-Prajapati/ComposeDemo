@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">ComposeDemo</string>
+    <string name="login_screen">Login</string>
+    <string name="signup_screen">Sign up</string>
+    <string name="back_button">Back</string>
+    <string name="strfName">First Name</string>
+    <string name="strlName">Last Name</string>
+    <string name="strPhone">Phone</string>
+    <string name="strEmail">Email</string>
+    <string name="strPassword">Password</string>
+    <string name="strTheFirstNameCanNotBeBlank">The first name can\'t be blank</string>
+    <string name="strTheLastNameCanNotBeBlank">The last name can\'t be blank</string>
+
+    <string name="strTheEmailCanNotBeBlank">The email can\'t be blank</string>
+    <string name="strThatsNotAValidEmail">That\'s not a valid email</string>
+
+    <string name="strThePasswordNeedsToConsistOfAtLeastEightCharacters">The password needs to consist of at least 8 characters</string>
+    <string name="strThePasswordNeedsToContainAtLeastOneLetterAndDigit">The password needs to contain at least one letter and digit</string>
+
+    <string name="strThePhoneCanNotBeBlank">The phone can\'t be blank</string>
+    <string name="strThePhoneNumberShouldBeContentJustDigit">The phone number should be content just digit</string>
+    <string name="strThePhoneNumberShouldContain10Digit">The phone number should be contains 10 digit</string>
+    <string name="strThisEmailIsAlreadyRegisteredPleaseTryWithAnotherOne">This Email is already registered, Please try with another one</string>
+</resources>
