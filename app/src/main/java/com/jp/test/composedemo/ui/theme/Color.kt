@@ -2,7 +2,7 @@ package com.jp.test.composedemo.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val colorBlue = Color(0xFF6C63FF)
+val colorBlue = Color(0xff66b3ff)
 val colorBlue1 = Color(0xFF001E63)
 val colorRed = Color(0xFFFF0000)
 val colorGreen = Color(0xFF003A00)

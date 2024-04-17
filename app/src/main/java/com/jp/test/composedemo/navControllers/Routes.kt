@@ -4,5 +4,5 @@ import androidx.annotation.StringRes
 import com.jp.test.composedemo.R
 
 enum class Routes(val title : String = "") {
-    Login("Login"), SignUp("Signup")
+    Login("Login"), SignUp("Signup"), ScreenMain("HomeScreen"), ForgotPassword("")
 }

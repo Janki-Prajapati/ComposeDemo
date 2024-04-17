@@ -26,7 +26,12 @@ fun AppBar(
     TopAppBar(
         title = { Text(currentScreen.title) },
         modifier = modifier,
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFF6f6f6)),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xff3366ff),
+            navigationIconContentColor = Color.White,
+            actionIconContentColor = Color.White,
+            titleContentColor = Color.White
+        ),
         navigationIcon = {
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {

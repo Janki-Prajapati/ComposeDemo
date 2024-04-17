@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.jp.test.composedemo.databse.Customer
 import com.jp.test.composedemo.databse.CustomerRepository
+import com.jp.test.composedemo.domain.usecase.ValidateCodeUseCase
 import com.jp.test.composedemo.domain.usecase.ValidateEmailUseCase
 import com.jp.test.composedemo.domain.usecase.ValidateFirstNameUseCase
 import com.jp.test.composedemo.domain.usecase.ValidateLastNameUseCase
@@ -28,6 +29,7 @@ class CustomerViewModel @Inject constructor(private val customerRepository: Cust
     private val validatePasswordUseCase = ValidatePasswordUseCase()
     private val validateFirstNameUseCase = ValidateFirstNameUseCase()
     private val validateLastNameUseCase = ValidateLastNameUseCase()
+    private val validateCodeUseCase = ValidateCodeUseCase()
 
     var formState by mutableStateOf(MainState())
 
@@ -37,6 +39,10 @@ class CustomerViewModel @Inject constructor(private val customerRepository: Cust
 
      fun findCustomer(eMail: String): LiveData<Int> {
         return customerRepository.findCustomer(eMail)
+    }
+
+    fun updatePassword(password: String, email: String){
+        customerRepository.updatePassword(password, email)
     }
 
     fun onEvent(event: MainEvent) {
@@ -69,11 +75,20 @@ class CustomerViewModel @Inject constructor(private val customerRepository: Cust
             is MainEvent.VisiblePassword -> {
                 formState = formState.copy(isVisiblePassword = event.isVisiblePassword)
             }
+
+            is MainEvent.CodeChanged -> {
+                formState = formState.copy(code = event.code)
+                validateCode()
+            }
         }
     }
 
     fun validateAllFields(): Boolean {
         return validateFirstName() && validateLastName() && validatePhone() && validateEmail() && validatePassword()
+    }
+
+    fun validateEmailPasswordFields(): Boolean {
+        return validateEmail() && validatePassword()
     }
 
     private fun validateFirstName(): Boolean {
@@ -105,6 +120,12 @@ class CustomerViewModel @Inject constructor(private val customerRepository: Cust
         formState = formState.copy(passwordError = passwordResult.errorMessage)
         return passwordResult.successful
     }
+
+    private fun validateCode(): Boolean {
+        val codeResult = validateCodeUseCase.execute(formState.code)
+        formState = formState.copy(codeError = codeResult.errorMessage)
+        return codeResult.successful
+    }
 }
 
 sealed class MainEvent {
@@ -114,6 +135,7 @@ sealed class MainEvent {
     data class EmailChanged(val email: String) : MainEvent()
     data class PasswordChanged(val password: String) : MainEvent()
     data class VisiblePassword(val isVisiblePassword: Boolean) : MainEvent()
+    data class CodeChanged(val code: String) : MainEvent()
 }
 
 data class MainState(
@@ -127,5 +149,7 @@ data class MainState(
     val emailError: UiText? = null,
     val password: String = "",
     val passwordError: UiText? = null,
-    val isVisiblePassword: Boolean = false
+    val isVisiblePassword: Boolean = false,
+    val code: String = "",
+    val codeError: UiText? = null,
 )

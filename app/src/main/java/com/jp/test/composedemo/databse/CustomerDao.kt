@@ -14,7 +14,7 @@ interface CustomerDao {
     suspend fun addCustomer(customer: Customer)
 
     @Query("SELECT COUNT(*) FROM customer WHERE email = :email")
-    fun findCustomer(email : String) : LiveData<Int>
+    fun findCustomer(email: String): LiveData<Int>
 
     @Query("SELECT * FROM customer")
     fun getCustomers(): List<Customer>
@@ -24,4 +24,7 @@ interface CustomerDao {
 
     @Delete
     suspend fun deleteCustomer(customer: Customer)
+
+    @Query("UPDATE customer SET password = :password WHERE email = :email")
+    suspend fun updatePassword(password: String, email: String)
 }

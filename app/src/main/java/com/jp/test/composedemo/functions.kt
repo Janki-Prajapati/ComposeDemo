@@ -18,3 +18,14 @@ fun isPasswordValid(password: String): Boolean {
     return password.any { it.isDigit() } &&
             password.any { it.isLetter() }
 }
+
+fun isCodeLength(value: String): Boolean {
+    return  value.length == 4
+}
+
+
+fun generatePIN() : String {
+
+    //generate a 4 digit integer 1000 <10000
+    return ((Math.random() * 9000).toInt() + 1000).toString()
+}

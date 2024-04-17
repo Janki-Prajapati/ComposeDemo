@@ -1,6 +1,6 @@
 package com.jp.test.composedemo.screen
 
-import android.view.KeyEvent.ACTION_DOWN
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -11,10 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -25,44 +24,45 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.jp.test.composedemo.R
+import com.jp.test.composedemo.components.CustomTextFieldApp
+import com.jp.test.composedemo.ui.theme.colorSilver
+import com.jp.test.composedemo.utils.PreferencesManager
+import com.jp.test.composedemo.viewmodels.CustomerViewModel
+import com.jp.test.composedemo.viewmodels.MainEvent
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(onClick: (String) -> Unit) {
-    val focusManager = LocalFocusManager.current
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
+    val viewModel = hiltViewModel<CustomerViewModel>()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val interactionSource =
         remember { MutableInteractionSource() } // or use val interactionSource = MutableInteractionSource()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -89,76 +89,56 @@ fun Login(onClick: (String) -> Unit) {
                     fontFamily = FontFamily.Serif
                 )
                 Spacer(modifier = Modifier.height(25.dp))
-                OutlinedTextField(
+                CustomTextFieldApp(
+                    placeholder = stringResource(id = R.string.strEmail),
+                    text = viewModel.formState.email,
+                    onValueChange = {
+                        viewModel.onEvent(MainEvent.EmailChanged(it))
+                    },
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .onPreviewKeyEvent {
-                            if (it.key == Key.Tab && it.nativeKeyEvent.action == ACTION_DOWN) {
-                                focusManager.moveFocus(FocusDirection.Down)
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email") },
-                    textStyle = TextStyle(
-                        color = Color.Black,
-                        fontSize = 15.sp,
-                        fontFamily = FontFamily.SansSerif,
-                        textAlign = TextAlign.Start
-                    ),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xff66b3ff),
-                        focusedLabelColor = Color(0xff66b3ff)
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        autoCorrect = false,
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(onNext = {
-                        focusManager.moveFocus(
-                            FocusDirection.Down
-                        )
-                    })
+                        .padding(horizontal = 16.dp),
+                    singleLine = true,
+                    isError = viewModel.formState.emailError != null,
+                    errorMessage = viewModel.formState.emailError,
                 )
                 Spacer(modifier = Modifier.height(15.dp))
-                OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Password") },
-                    textStyle = TextStyle(
-                        color = Color.Black,
-                        fontSize = 15.sp,
-                        fontFamily = FontFamily.SansSerif,
-                        textAlign = TextAlign.Start
-                    ),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xff66b3ff),
-                        focusedLabelColor = Color(0xff66b3ff)
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        autoCorrect = false,
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Go
-                    ),
-                    keyboardActions = KeyboardActions(onGo = {}),
+                CustomTextFieldApp(
+                    placeholder = stringResource(id = R.string.strPassword),
+                    text = viewModel.formState.password,
+                    onValueChange = {
+                        viewModel.onEvent(MainEvent.PasswordChanged(it))
+                    },
+                    keyboardType = KeyboardType.Password,
+                    ImeAction.Done,
                     trailingIcon = {
-                        val image = if (passwordVisible)
-                            Icons.Filled.Visibility
-                        else Icons.Filled.VisibilityOff
-
-                        // Please provide localized description for accessibility services
-                        val description = if (passwordVisible) "Hide password" else "Show password"
-
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(imageVector = image, description)
+                        CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+                            IconButton(
+                                onClick =
+                                {
+                                    viewModel.onEvent(MainEvent.VisiblePassword(!(viewModel.formState.isVisiblePassword)))
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = if (viewModel.formState.isVisiblePassword)
+                                        Icons.Filled.Visibility
+                                    else Icons.Filled.VisibilityOff,
+                                    contentDescription = "Visible",
+                                    tint = colorSilver,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
                         }
-                    }
+                    },
+                    isVisible = viewModel.formState.isVisiblePassword,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    singleLine = true,
+                    isError = viewModel.formState.passwordError != null,
+                    errorMessage = viewModel.formState.passwordError
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -186,8 +166,42 @@ fun Login(onClick: (String) -> Unit) {
                     content = {
                         Text(text = "Login", textAlign = TextAlign.Center)
                     },
-                    onClick = { onClick("login") }
+                    onClick = {
+                        viewModel.findCustomer(viewModel.formState.email)
+                            .observe(lifecycleOwner) {
+                                if (it > 0) {
+                                    onClick("login")
+                                }
+
+                            }
+
+                    }
                 )
+
+
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(
+                    onClick = {
+                        onClick("googleSignUp")
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(5.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xffcce6ff),
+                        contentColor = Color.White
+                    )
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .height(20.dp)
+                            .width(20.dp),
+                        painter = painterResource(id = R.drawable.ic_google),
+                        contentDescription = ""
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(text = "Continue with Google", color = Color(0xff3366ff))
+                }
 
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
