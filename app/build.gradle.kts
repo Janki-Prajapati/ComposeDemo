@@ -89,4 +89,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
+
+    implementation("androidx.compose.ui:ui:1.0.0'")
+    implementation("androidx.compose.material:material:1.0.0")
+    implementation(kotlin("reflect"))
 }

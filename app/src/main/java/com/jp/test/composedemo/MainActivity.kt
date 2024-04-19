@@ -152,7 +152,7 @@ fun MyApp(
 
         composable(Routes.ScreenMain.name) {
 
-            showTopAppBar.value = true
+            showTopAppBar.value = false
             ScreenMain()
         }
 
