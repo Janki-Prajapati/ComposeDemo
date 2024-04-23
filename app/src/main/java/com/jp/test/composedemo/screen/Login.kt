@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.jp.test.composedemo.Constants
 import com.jp.test.composedemo.R
 import com.jp.test.composedemo.components.CustomTextFieldApp
 import com.jp.test.composedemo.ui.theme.colorSilver
@@ -62,6 +63,8 @@ fun Login(onClick: (String) -> Unit) {
 
     val interactionSource =
         remember { MutableInteractionSource() } // or use val interactionSource = MutableInteractionSource()
+    val context = LocalContext.current
+    val preferencesManager = remember { PreferencesManager(context) }
 
     Column(
         modifier = Modifier
@@ -170,6 +173,7 @@ fun Login(onClick: (String) -> Unit) {
                         viewModel.findCustomer(viewModel.formState.email)
                             .observe(lifecycleOwner) {
                                 if (it > 0) {
+                                    preferencesManager.saveStringData(Constants.PREF_KEY_EMAIL, viewModel.formState.email)
                                     onClick("login")
                                 }
 

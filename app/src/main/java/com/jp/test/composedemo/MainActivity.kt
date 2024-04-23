@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
 
                 val currentScreen = Routes.valueOf(
                     if (preferencesManager.getBooleanData(
-                            "isLoggedIn",
+                            Constants.PREF_KEY_IS_LOGGED_IN,
                             false
                         )
                     ) Routes.ScreenMain.name else backStackEntry?.destination?.route
@@ -99,7 +99,7 @@ fun MyApp(
 ) {
     val preferencesManager = remember { PreferencesManager(context) }
     val currentScreen = if (preferencesManager.getBooleanData(
-            "isLoggedIn",
+            Constants.PREF_KEY_IS_LOGGED_IN,
             false
         )
     ) Routes.ScreenMain.name else Routes.Login.name
@@ -121,7 +121,7 @@ fun MyApp(
 
                     "login" -> {
                         // Update data and save to SharedPreferences
-                        preferencesManager.saveBooleanData("isLoggedIn", true)
+                        preferencesManager.saveBooleanData(Constants.PREF_KEY_IS_LOGGED_IN, true)
                         navController.navigate(route = Routes.ScreenMain.name)
                     }
 

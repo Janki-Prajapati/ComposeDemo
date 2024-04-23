@@ -16,10 +16,13 @@ interface CustomerDao {
     @Query("SELECT COUNT(*) FROM customer WHERE email = :email")
     fun findCustomer(email: String): LiveData<Int>
 
+    @Query("SELECT * FROM customer WHERE email = :email")
+    fun getCustomerData(email: String): LiveData<Customer>
+
     @Query("SELECT * FROM customer")
     fun getCustomers(): List<Customer>
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateCustomerDetails(customer: Customer)
 
     @Delete

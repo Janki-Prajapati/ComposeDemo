@@ -19,6 +19,15 @@ class CustomerRepository @Inject constructor(private val customerDao: CustomerDa
        return customerDao.findCustomer(email)
     }
 
+     fun getCustomerData(email: String): LiveData<Customer> {
+       return customerDao.getCustomerData(email)
+    }
+
+    fun updateCustomerDetails(customer: Customer){
+        CoroutineScope(Dispatchers.IO).launch {
+            customerDao.updateCustomerDetails(customer)
+        }
+    }
     fun updatePassword(password : String, email: String){
         CoroutineScope(Dispatchers.IO).launch {
             customerDao.updatePassword(password, email)
