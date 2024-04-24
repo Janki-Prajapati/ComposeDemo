@@ -48,6 +48,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.jp.test.composedemo.R
 import com.jp.test.composedemo.components.CustomTextFieldApp
 import com.jp.test.composedemo.databse.Customer
@@ -58,7 +60,7 @@ import com.jp.test.composedemo.viewmodels.MainEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignUp(onClick: (String) -> Unit) {
+fun SignUp(navController: NavHostController) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val viewModel = hiltViewModel<CustomerViewModel>()
@@ -162,7 +164,7 @@ fun SignUp(onClick: (String) -> Unit) {
                     imeAction = ImeAction.Next,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        ,
                     singleLine = true,
                     isError = viewModel.formState.fNameError != null,
                     errorMessage = viewModel.formState.fNameError,
@@ -178,7 +180,7 @@ fun SignUp(onClick: (String) -> Unit) {
                     imeAction = ImeAction.Next,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        ,
                     singleLine = true,
                     isError = viewModel.formState.lNameError != null,
                     errorMessage = viewModel.formState.lNameError,
@@ -195,7 +197,7 @@ fun SignUp(onClick: (String) -> Unit) {
                     imeAction = ImeAction.Next,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        ,
                     singleLine = true,
                     isError = viewModel.formState.phoneError != null,
                     errorMessage = viewModel.formState.phoneError,
@@ -211,7 +213,7 @@ fun SignUp(onClick: (String) -> Unit) {
                     imeAction = ImeAction.Next,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        ,
                     singleLine = true,
                     isError = viewModel.formState.emailError != null,
                     errorMessage = viewModel.formState.emailError,
@@ -247,7 +249,7 @@ fun SignUp(onClick: (String) -> Unit) {
                     isVisible = viewModel.formState.isVisiblePassword,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        ,
                     singleLine = true,
                     isError = viewModel.formState.passwordError != null,
                     errorMessage = viewModel.formState.passwordError
@@ -276,7 +278,7 @@ fun SignUp(onClick: (String) -> Unit) {
                                                 password = viewModel.formState.password
                                             )
                                         )
-                                        onClick("signup")
+                                        navController.navigateUp()
                                     }
 
                                 }
@@ -308,7 +310,7 @@ fun SignUp(onClick: (String) -> Unit) {
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(
                         modifier = Modifier.clickable {
-                            onClick("login")
+                            navController.navigateUp()
                         },
                         text = "Login",
                         fontWeight = FontWeight.Normal,
@@ -333,5 +335,5 @@ fun saveDataToDb(viewModel: CustomerViewModel, customer: Customer) {
 @Preview(showBackground = true)
 @Composable
 fun SignUpPreview() {
-    SignUp(onClick = {})
+    SignUp(rememberNavController())
 }

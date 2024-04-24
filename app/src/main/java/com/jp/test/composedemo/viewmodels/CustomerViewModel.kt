@@ -24,7 +24,8 @@ import javax.inject.Inject
 class CustomerViewModel @Inject constructor(private val customerRepository: CustomerRepository) :
     ViewModel() {
 
-    lateinit var customerData: LiveData<Customer>
+    var customerData: LiveData<Customer>?= null
+    var isValidLogin: LiveData<Int>?= null
     private val validatePhoneNumberUseCase = ValidatePhoneNumberUseCase()
     private val validateEmailUseCase = ValidateEmailUseCase()
     private val validatePasswordUseCase = ValidatePasswordUseCase()
@@ -42,19 +43,12 @@ class CustomerViewModel @Inject constructor(private val customerRepository: Cust
         return customerRepository.findCustomer(eMail)
     }
 
-    fun getCustomerData(email: String) {
-        customerData = customerRepository.getCustomerData(email)
-        setDataToMainState()
+    fun findCustomerWithPassword(eMail: String, password: String) {
+        isValidLogin =  customerRepository.findCustomerWithPassword(eMail, password)
     }
 
-    private fun setDataToMainState() {
-        customerData.value?.apply {
-            onEvent(MainEvent.FirstNameChanged(firstName))
-            onEvent(MainEvent.LastNameChanged(lastName))
-            onEvent(MainEvent.PhoneChanged(phone))
-            onEvent(MainEvent.EmailChanged(email))
-            onEvent(MainEvent.PasswordChanged(password))
-        }
+    fun getCustomerData(email: String) {
+        customerData = customerRepository.getCustomerData(email)
     }
 
     fun updateCustomer(customer: Customer) {

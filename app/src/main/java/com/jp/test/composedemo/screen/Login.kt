@@ -28,6 +28,7 @@ import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,17 +48,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.jp.test.composedemo.Constants
 import com.jp.test.composedemo.R
 import com.jp.test.composedemo.components.CustomTextFieldApp
+import com.jp.test.composedemo.navControllers.Routes
 import com.jp.test.composedemo.ui.theme.colorSilver
+import com.jp.test.composedemo.utils.Extensions.makeToast
 import com.jp.test.composedemo.utils.PreferencesManager
 import com.jp.test.composedemo.viewmodels.CustomerViewModel
 import com.jp.test.composedemo.viewmodels.MainEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Login(onClick: (String) -> Unit) {
+fun Login(navController: NavHostController) {
     val viewModel = hiltViewModel<CustomerViewModel>()
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -65,6 +70,8 @@ fun Login(onClick: (String) -> Unit) {
         remember { MutableInteractionSource() } // or use val interactionSource = MutableInteractionSource()
     val context = LocalContext.current
     val preferencesManager = remember { PreferencesManager(context) }
+
+    val validLogin = viewModel.isValidLogin?.observeAsState()?.value ?: 0
 
     Column(
         modifier = Modifier
@@ -101,8 +108,7 @@ fun Login(onClick: (String) -> Unit) {
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .fillMaxWidth(),
                     singleLine = true,
                     isError = viewModel.formState.emailError != null,
                     errorMessage = viewModel.formState.emailError,
@@ -137,8 +143,7 @@ fun Login(onClick: (String) -> Unit) {
                     },
                     isVisible = viewModel.formState.isVisiblePassword,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .fillMaxWidth(),
                     singleLine = true,
                     isError = viewModel.formState.passwordError != null,
                     errorMessage = viewModel.formState.passwordError
@@ -151,7 +156,7 @@ fun Login(onClick: (String) -> Unit) {
                         .clickable(
                             interactionSource = interactionSource,
                             indication = null
-                        ) { onClick("forgotPassword") },
+                        ) { navController.navigate(route = Routes.ForgotPassword.route) },
                     text = "Forgot Password?",
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,
@@ -170,14 +175,26 @@ fun Login(onClick: (String) -> Unit) {
                         Text(text = "Login", textAlign = TextAlign.Center)
                     },
                     onClick = {
-                        viewModel.findCustomer(viewModel.formState.email)
-                            .observe(lifecycleOwner) {
-                                if (it > 0) {
-                                    preferencesManager.saveStringData(Constants.PREF_KEY_EMAIL, viewModel.formState.email)
-                                    onClick("login")
-                                }
+                        viewModel.findCustomerWithPassword(
+                            viewModel.formState.email,
+                            viewModel.formState.password
+                        )
 
-                            }
+                        if (validLogin > 0) {
+                            preferencesManager.saveStringData(
+                                Constants.PREF_KEY_EMAIL,
+                                viewModel.formState.email
+                            )
+                            // Update data and save to SharedPreferences
+                            preferencesManager.saveBooleanData(
+                                Constants.PREF_KEY_IS_LOGGED_IN,
+                                true
+                            )
+                            navController.navigate(route = Routes.HomeNav.route)
+                        }else{
+                            context.makeToast("Email or password is incorrect!!")
+                        }
+
 
                     }
                 )
@@ -186,7 +203,7 @@ fun Login(onClick: (String) -> Unit) {
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = {
-                        onClick("googleSignUp")
+                        context.makeToast("Google Sign up Clicked!!")
                     },
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -226,7 +243,7 @@ fun Login(onClick: (String) -> Unit) {
                         modifier = Modifier.clickable(
                             interactionSource = interactionSource,
                             indication = null
-                        ) { onClick("signup") },
+                        ) { navController.navigate(route = Routes.SignUp.route) },
                         text = "Sign up",
                         fontWeight = FontWeight.Normal,
                         fontSize = 12.sp,
@@ -244,5 +261,5 @@ fun Login(onClick: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    Login(onClick = {})
+    Login(rememberNavController())
 }

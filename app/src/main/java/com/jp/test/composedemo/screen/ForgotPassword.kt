@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -68,7 +69,7 @@ import com.jp.test.composedemo.viewmodels.MainEvent
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
-fun ForgotPassword(onClick: (String) -> Unit) {
+fun ForgotPassword(navHostController: NavHostController) {
     val viewModel = hiltViewModel<CustomerViewModel>()
 
     val isCodeTextFieldVisible = remember { mutableStateOf(false) }
@@ -150,7 +151,7 @@ fun ForgotPassword(onClick: (String) -> Unit) {
                 // onDismissRequest.
                 openDialog.value = false
                 if (isPasswordChange.value) {
-                    onClick("passwordChanged")
+                    navHostController.navigateUp()
                 }
             }
         ) {
@@ -193,7 +194,7 @@ fun ForgotPassword(onClick: (String) -> Unit) {
                             .clickable {
                                 openDialog.value = false
                                 if (isPasswordChange.value) {
-                                    onClick("passwordChanged")
+                                    navHostController.navigateUp()
                                 }
                             },
                         text = context.getString(R.string.strOk),
@@ -345,7 +346,10 @@ fun ForgotPassword(onClick: (String) -> Unit) {
                             Text(text = "Confirm Code", textAlign = TextAlign.Center)
                         },
                         onClick = {
-
+                            viewModel.updatePassword(
+                                password = viewModel.formState.password,
+                                email = viewModel.formState.email
+                            )
                             dialogMessage.value =
                                 context.getString(R.string.strThePasswordHasBeenUpdatedSuccessfully)
                             openDialog.value = true

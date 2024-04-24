@@ -21,13 +21,13 @@ import androidx.compose.material3.LocalMinimumTouchTargetEnforcement
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,15 +52,17 @@ fun Profile() {
     val preferencesManager = remember { PreferencesManager(context) }
 
     viewModel.getCustomerData(preferencesManager.getStringData(Constants.PREF_KEY_EMAIL, ""))
-    val data = viewModel.customerData.observeAsState().value
+    val data = viewModel.customerData?.observeAsState()?.value
 
     if (data != null) {
+        LaunchedEffect(key1 = null) {
+            viewModel.onEvent(MainEvent.FirstNameChanged(data.firstName))
+            viewModel.onEvent(MainEvent.LastNameChanged(data.lastName))
+            viewModel.onEvent(MainEvent.PhoneChanged(data.phone))
+            viewModel.onEvent(MainEvent.EmailChanged(data.email))
+            viewModel.onEvent(MainEvent.PasswordChanged(data.password))
+        }
 
-        viewModel.onEvent(MainEvent.FirstNameChanged(data.firstName))
-        viewModel.onEvent(MainEvent.LastNameChanged(data.lastName))
-        viewModel.onEvent(MainEvent.PhoneChanged(data.phone))
-        viewModel.onEvent(MainEvent.EmailChanged(data.email))
-        viewModel.onEvent(MainEvent.PasswordChanged(data.password))
 
         Column(
             modifier = Modifier
@@ -171,19 +173,21 @@ fun Profile() {
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     if (viewModel.validateAllFields()) {
-
-                        var customerId = 0
-                        data?.let { customerId = it.id }
                         updateDataToDb(
                             viewModel,
                             Customer(
-                                customerId,
+                                data.id,
                                 viewModel.formState.fName,
                                 viewModel.formState.lName,
-                                viewModel.formState.email,
                                 viewModel.formState.phone,
+                                viewModel.formState.email,
                                 viewModel.formState.password
                             )
+                        )
+
+                        preferencesManager.saveStringData(
+                            Constants.PREF_KEY_EMAIL,
+                            viewModel.formState.email
                         )
 
                     }

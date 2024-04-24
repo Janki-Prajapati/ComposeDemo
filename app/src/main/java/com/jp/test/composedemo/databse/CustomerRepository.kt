@@ -19,6 +19,10 @@ class CustomerRepository @Inject constructor(private val customerDao: CustomerDa
        return customerDao.findCustomer(email)
     }
 
+     fun findCustomerWithPassword(email: String, password: String): LiveData<Int> {
+       return customerDao.findCustomerWithPassword(email, password)
+    }
+
      fun getCustomerData(email: String): LiveData<Customer> {
        return customerDao.getCustomerData(email)
     }

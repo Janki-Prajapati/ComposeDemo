@@ -3,6 +3,7 @@
     <string name="login_screen">Login</string>
     <string name="signup_screen">Sign up</string>
     <string name="back_button">Back</string>
+    <string name="logout_button">Logout</string>
     <string name="strfName">First Name</string>
     <string name="strlName">Last Name</string>
     <string name="strPhone">Phone</string>

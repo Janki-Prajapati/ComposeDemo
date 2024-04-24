@@ -16,6 +16,9 @@ interface CustomerDao {
     @Query("SELECT COUNT(*) FROM customer WHERE email = :email")
     fun findCustomer(email: String): LiveData<Int>
 
+    @Query("SELECT COUNT(*) FROM customer WHERE email = :email AND password = :password")
+    fun findCustomerWithPassword(email: String, password: String): LiveData<Int>
+
     @Query("SELECT * FROM customer WHERE email = :email")
     fun getCustomerData(email: String): LiveData<Customer>
 
