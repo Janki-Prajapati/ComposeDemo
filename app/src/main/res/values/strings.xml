@@ -1,4 +1,5 @@
 <resources>
+    //UI strings
     <string name="app_name">ComposeDemo</string>
     <string name="login_screen">Login</string>
     <string name="signup_screen">Sign up</string>
@@ -10,11 +11,29 @@
     <string name="strEmail">Email</string>
     <string name="strPassword">Password</string>
     <string name="strNewPassword">New Password</string>
+    <string name="strUpdate">Update</string>
+    <string name="strSendCode">Send Code</string>
+    <string name="strConfirmCode">Confirm Code</string>
     <string name="strOk">Ok</string>
     <string name="strCode">Code</string>
+    <string name="strCancel">Cancel</string>
     <string name="strTheFirstNameCanNotBeBlank">The first name can\'t be blank</string>
     <string name="strTheLastNameCanNotBeBlank">The last name can\'t be blank</string>
+    <string name="strForgotPassword">Forgot Password?</string>
+    <string name="strEmailOrPasswordIsIncorrect">Email or password is incorrect!!</string>
+    <string name="strDontHaveAnAccount">Don\'t have an account?</string>
+    <string name="strVisible">Visible</string>
+    <string name="strLoginToYourAccount">Login to your account</string>
+    <string name="strCreateAnAccount">Create an account</string>
+    <string name="strAlreadyHaveAnAccount">Already have an account?</string>
+    <string name="strResetYourPassword">Reset your password</string>
+    <string name="settings">Settings</string>
+    <string name="strHome">Home</string>
+    <string name="strSearch">Search</string>
+    <string name="strProfile">Profile</string>
 
+
+    //validation strings
     <string name="strTheEmailCanNotBeBlank">The email can\'t be blank</string>
     <string name="strThatsNotAValidEmail">That\'s not a valid email</string>
 
@@ -24,18 +43,20 @@
     <string name="strThePhoneCanNotBeBlank">The phone can\'t be blank</string>
     <string name="strThePhoneNumberShouldBeContentJustDigit">The phone number should be content just digit</string>
     <string name="strThePhoneNumberShouldContain10Digit">The phone number should be contains 10 digits</string>
+
     <string name="strThisEmailIsAlreadyRegisteredPleaseTryWithAnotherOne">This Email is already registered, Please try with another one</string>
     <string name="strThisEmailIsNotRegisteredPleaseTryWithRegisteredEmail">This Email is not registered, Please try with registered email</string>
-
 
     <string name="strTheCodeCanNotBeBlank">The code can\'t be blank</string>
     <string name="strTheCodeShouldContain4Digit">The code should be contains 4 digits</string>
     <string name="strTheCodeShouldBeContentJustDigit">The code should be content just digit</string>
+
     <string name="strThePasswordHasBeenUpdatedSuccessfully">The password has been updated successfully!</string>
-    <string name="settings">Settings</string>
     <string name="notification_permission_denied">To send the verification code we need this permission.</string>
 
-    <string name="strHome">Home</string>
-    <string name="strSearch">Search</string>
-    <string name="strProfile">Profile</string>
+
+
+    //permission strings
+    <string name="strPermission">Permission</string>
+    <string name="strTheNotificationIsImportantForThisAppPleaseGrantThePermission">The notification is important for this app. Please grant the permission.</string>
 </resources>

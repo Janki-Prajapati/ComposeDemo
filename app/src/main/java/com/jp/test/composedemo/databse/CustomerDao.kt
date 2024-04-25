@@ -1,6 +1,7 @@
 package com.jp.test.composedemo.databse
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -16,8 +17,8 @@ interface CustomerDao {
     @Query("SELECT COUNT(*) FROM customer WHERE email = :email")
     fun findCustomer(email: String): LiveData<Int>
 
-    @Query("SELECT COUNT(*) FROM customer WHERE email = :email AND password = :password")
-    fun findCustomerWithPassword(email: String, password: String): LiveData<Int>
+    @Query("SELECT * FROM customer WHERE email = :email AND password = :password")
+    suspend fun findCustomerWithPassword(email: String, password: String): Customer
 
     @Query("SELECT * FROM customer WHERE email = :email")
     fun getCustomerData(email: String): LiveData<Customer>

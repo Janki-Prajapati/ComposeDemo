@@ -1,6 +1,7 @@
 package com.jp.test.composedemo.databse
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -19,7 +20,7 @@ class CustomerRepository @Inject constructor(private val customerDao: CustomerDa
        return customerDao.findCustomer(email)
     }
 
-     fun findCustomerWithPassword(email: String, password: String): LiveData<Int> {
+     suspend fun findCustomerWithPassword(email: String, password: String): Customer {
        return customerDao.findCustomerWithPassword(email, password)
     }
 

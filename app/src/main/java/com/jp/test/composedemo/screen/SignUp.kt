@@ -53,6 +53,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jp.test.composedemo.R
 import com.jp.test.composedemo.components.CustomTextFieldApp
 import com.jp.test.composedemo.databse.Customer
+import com.jp.test.composedemo.ui.theme.colorBlue
 import com.jp.test.composedemo.ui.theme.colorSilver
 import com.jp.test.composedemo.utils.Extensions.makeToast
 import com.jp.test.composedemo.viewmodels.CustomerViewModel
@@ -163,8 +164,7 @@ fun SignUp(navController: NavHostController) {
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        ,
+                        .fillMaxWidth(),
                     singleLine = true,
                     isError = viewModel.formState.fNameError != null,
                     errorMessage = viewModel.formState.fNameError,
@@ -179,8 +179,7 @@ fun SignUp(navController: NavHostController) {
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        ,
+                        .fillMaxWidth(),
                     singleLine = true,
                     isError = viewModel.formState.lNameError != null,
                     errorMessage = viewModel.formState.lNameError,
@@ -196,8 +195,7 @@ fun SignUp(navController: NavHostController) {
                     keyboardType = KeyboardType.Phone,
                     imeAction = ImeAction.Next,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        ,
+                        .fillMaxWidth(),
                     singleLine = true,
                     isError = viewModel.formState.phoneError != null,
                     errorMessage = viewModel.formState.phoneError,
@@ -212,8 +210,7 @@ fun SignUp(navController: NavHostController) {
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        ,
+                        .fillMaxWidth(),
                     singleLine = true,
                     isError = viewModel.formState.emailError != null,
                     errorMessage = viewModel.formState.emailError,
@@ -239,7 +236,7 @@ fun SignUp(navController: NavHostController) {
                                     imageVector = if (viewModel.formState.isVisiblePassword)
                                         Icons.Filled.Visibility
                                     else Icons.Filled.VisibilityOff,
-                                    contentDescription = "Visible",
+                                    contentDescription = stringResource(id = R.string.strVisible),
                                     tint = colorSilver,
                                     modifier = Modifier.size(20.dp)
                                 )
@@ -248,8 +245,7 @@ fun SignUp(navController: NavHostController) {
                     },
                     isVisible = viewModel.formState.isVisiblePassword,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        ,
+                        .fillMaxWidth(),
                     singleLine = true,
                     isError = viewModel.formState.passwordError != null,
                     errorMessage = viewModel.formState.passwordError
@@ -289,7 +285,10 @@ fun SignUp(navController: NavHostController) {
                     shape = RoundedCornerShape(5.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xff3366ff)),
                     content = {
-                        Text(text = "Create an account", textAlign = TextAlign.Center)
+                        Text(
+                            text = stringResource(id = R.string.strCreateAnAccount),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 )
 
@@ -300,7 +299,7 @@ fun SignUp(navController: NavHostController) {
 
                 ) {
                     Text(
-                        text = "Already have an account?",
+                        text = stringResource(id = R.string.strAlreadyHaveAnAccount),
                         fontWeight = FontWeight.Normal,
                         fontSize = 14.sp,
                         fontFamily = FontFamily.SansSerif,
@@ -312,11 +311,11 @@ fun SignUp(navController: NavHostController) {
                         modifier = Modifier.clickable {
                             navController.navigateUp()
                         },
-                        text = "Login",
+                        text = stringResource(id = R.string.login_screen),
                         fontWeight = FontWeight.Normal,
                         fontSize = 14.sp,
                         fontFamily = FontFamily.SansSerif,
-                        color = Color(0xff66b3ff)
+                        color = colorBlue
                     )
                 }
             }

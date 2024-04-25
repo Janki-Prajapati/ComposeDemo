@@ -81,7 +81,7 @@ dependencies {
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
-    implementation("androidx.compose.runtime:runtime-livedata:1.2.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.6")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
@@ -91,7 +91,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
 
     implementation("androidx.compose.ui:ui:1.0.0'")
-    implementation("androidx.compose.material:material:1.0.0")
+    implementation("androidx.compose.material3:material3:1.2.1")
     implementation(kotlin("reflect"))
 
     implementation("com.google.code.gson:gson:2.8.8")

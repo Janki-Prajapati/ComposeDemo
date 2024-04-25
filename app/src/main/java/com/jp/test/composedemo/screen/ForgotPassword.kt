@@ -63,6 +63,7 @@ import com.jp.test.composedemo.NotificationService
 import com.jp.test.composedemo.R
 import com.jp.test.composedemo.components.CustomTextFieldApp
 import com.jp.test.composedemo.generatePIN
+import com.jp.test.composedemo.ui.theme.colorAppTheme
 import com.jp.test.composedemo.ui.theme.colorSilver
 import com.jp.test.composedemo.viewmodels.CustomerViewModel
 import com.jp.test.composedemo.viewmodels.MainEvent
@@ -106,14 +107,14 @@ fun ForgotPassword(navHostController: NavHostController) {
             },
             title = {
                 Text(
-                    text = "Permission",
+                    text = stringResource(id = R.string.strPermission),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
             },
             text = {
                 Text(
-                    "The notification is important for this app. Please grant the permission.",
+                    stringResource(id = R.string.strTheNotificationIsImportantForThisAppPleaseGrantThePermission),
                     fontSize = 16.sp
                 )
             },
@@ -129,7 +130,10 @@ fun ForgotPassword(navHostController: NavHostController) {
                         startActivity(context, intent, null)
 
                     }) {
-                    Text("OK", style = TextStyle(color = Color.Black))
+                    Text(
+                        stringResource(id = R.string.strOk),
+                        style = TextStyle(color = Color.Black)
+                    )
                 }
             },
             dismissButton = {
@@ -137,7 +141,10 @@ fun ForgotPassword(navHostController: NavHostController) {
                     onClick = {
                         showRationalDialog.value = false
                     }) {
-                    Text("Cancel", style = TextStyle(color = Color.Black))
+                    Text(
+                        stringResource(id = R.string.strCancel),
+                        style = TextStyle(color = Color.Black)
+                    )
                 }
             },
         )
@@ -229,7 +236,7 @@ fun ForgotPassword(navHostController: NavHostController) {
             ) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "Reset your password",
+                    text = stringResource(id = R.string.strResetYourPassword),
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     fontFamily = FontFamily.Serif
@@ -301,9 +308,12 @@ fun ForgotPassword(navHostController: NavHostController) {
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(5.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xff3366ff)),
+                        colors = ButtonDefaults.buttonColors(containerColor = colorAppTheme),
                         content = {
-                            Text(text = "Send Code", textAlign = TextAlign.Center)
+                            Text(
+                                text = stringResource(id = R.string.strSendCode),
+                                textAlign = TextAlign.Center
+                            )
                         },
                         onClick = {
 
@@ -343,7 +353,10 @@ fun ForgotPassword(navHostController: NavHostController) {
                         shape = RoundedCornerShape(5.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xff3366ff)),
                         content = {
-                            Text(text = "Confirm Code", textAlign = TextAlign.Center)
+                            Text(
+                                text = stringResource(id = R.string.strConfirmCode),
+                                textAlign = TextAlign.Center
+                            )
                         },
                         onClick = {
                             viewModel.updatePassword(

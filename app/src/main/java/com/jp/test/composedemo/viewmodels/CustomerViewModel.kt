@@ -1,10 +1,13 @@
 package com.jp.test.composedemo.viewmodels
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jp.test.composedemo.databse.Customer
 import com.jp.test.composedemo.databse.CustomerRepository
 import com.jp.test.composedemo.domain.usecase.ValidateCodeUseCase
@@ -15,17 +18,18 @@ import com.jp.test.composedemo.domain.usecase.ValidatePasswordUseCase
 import com.jp.test.composedemo.domain.usecase.ValidatePhoneNumberUseCase
 import com.jp.test.composedemo.generic.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CustomerViewModel @Inject constructor(private val customerRepository: CustomerRepository) :
     ViewModel() {
 
-    var customerData: LiveData<Customer>?= null
-    var isValidLogin: LiveData<Int>?= null
+    var customerData: LiveData<Customer>? = null
+    var isValidCustomer by mutableStateOf(Customer(0, "", "", "","",""))
+        private set
+
+
     private val validatePhoneNumberUseCase = ValidatePhoneNumberUseCase()
     private val validateEmailUseCase = ValidateEmailUseCase()
     private val validatePasswordUseCase = ValidatePasswordUseCase()
@@ -43,8 +47,8 @@ class CustomerViewModel @Inject constructor(private val customerRepository: Cust
         return customerRepository.findCustomer(eMail)
     }
 
-    fun findCustomerWithPassword(eMail: String, password: String) {
-        isValidLogin =  customerRepository.findCustomerWithPassword(eMail, password)
+    fun findCustomerWithPassword(eMail: String, password: String) = viewModelScope.launch {
+        isValidCustomer = customerRepository.findCustomerWithPassword(eMail, password)
     }
 
     fun getCustomerData(email: String) {

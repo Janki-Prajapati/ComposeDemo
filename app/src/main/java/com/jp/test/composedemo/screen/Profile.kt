@@ -152,7 +152,7 @@ fun Profile() {
                                 imageVector = if (viewModel.formState.isVisiblePassword)
                                     Icons.Filled.Visibility
                                 else Icons.Filled.VisibilityOff,
-                                contentDescription = "Visible",
+                                contentDescription = stringResource(id = R.string.strVisible),
                                 tint = colorSilver,
                                 modifier = Modifier.size(20.dp)
                             )
@@ -196,7 +196,7 @@ fun Profile() {
                 shape = RoundedCornerShape(5.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xff3366ff)),
                 content = {
-                    Text(text = "Update", textAlign = TextAlign.Center)
+                    Text(text = stringResource(id = R.string.strUpdate), textAlign = TextAlign.Center)
                 }
             )
         }
