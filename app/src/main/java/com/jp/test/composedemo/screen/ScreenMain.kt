@@ -3,7 +3,6 @@ package com.jp.test.composedemo.screen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
@@ -28,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.jp.test.composedemo.Constants
@@ -37,6 +37,7 @@ import com.jp.test.composedemo.navigation.HomeNavGraph
 import com.jp.test.composedemo.ui.theme.colorAppTheme
 import com.jp.test.composedemo.ui.theme.colorBlue
 import com.jp.test.composedemo.utils.PreferencesManager
+import com.jp.test.composedemo.viewmodels.RecipesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -52,6 +53,7 @@ fun ScreenMain(logout: () -> Unit) {
         backStackEntry?.destination?.route
             ?: BottomNavItem.HomeItem.route
 
+    val recipesViewModel = hiltViewModel<RecipesViewModel>()
 
     val bottomNavigationItems = listOf(
         BottomNavItem.HomeItem,
@@ -153,7 +155,7 @@ fun ScreenMain(logout: () -> Unit) {
             }
         }) {
         HomeNavGraph(
-            navController
+            navController, recipesViewModel
         )
     }
 }

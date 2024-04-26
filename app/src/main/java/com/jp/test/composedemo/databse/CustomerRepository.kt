@@ -20,7 +20,7 @@ class CustomerRepository @Inject constructor(private val customerDao: CustomerDa
        return customerDao.findCustomer(email)
     }
 
-     suspend fun findCustomerWithPassword(email: String, password: String): Customer {
+     suspend fun findCustomerWithPassword(email: String, password: String): Customer? {
        return customerDao.findCustomerWithPassword(email, password)
     }
 

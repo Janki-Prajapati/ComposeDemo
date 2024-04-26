@@ -18,7 +18,7 @@ interface CustomerDao {
     fun findCustomer(email: String): LiveData<Int>
 
     @Query("SELECT * FROM customer WHERE email = :email AND password = :password")
-    suspend fun findCustomerWithPassword(email: String, password: String): Customer
+    suspend fun findCustomerWithPassword(email: String, password: String): Customer?
 
     @Query("SELECT * FROM customer WHERE email = :email")
     fun getCustomerData(email: String): LiveData<Customer>

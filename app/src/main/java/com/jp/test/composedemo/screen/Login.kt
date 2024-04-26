@@ -86,7 +86,7 @@ fun Login(navController: NavHostController) {
         if (viewModel.isValidCustomer.id != 0) {
             preferencesManager.saveStringData(
                 Constants.PREF_KEY_EMAIL,
-                viewModel.formState.email
+                viewModel.isValidCustomer.email
             )
             // Update data and save to SharedPreferences
             preferencesManager.saveBooleanData(
@@ -98,6 +98,7 @@ fun Login(navController: NavHostController) {
             navController.navigate(route = Routes.HomeNav.route)
 
         } else {
+            isProgressBarVisible.value = false
             context.makeToast(context.getString(R.string.strEmailOrPasswordIsIncorrect))
         }
     }
@@ -211,15 +212,17 @@ fun Login(navController: NavHostController) {
                             )
                         },
                         onClick = {
-                            isProgressBarVisible.value = true
+                            if (viewModel.validateEmailPasswordFields()) {
+                                isProgressBarVisible.value = true
 
-                            viewModel.findCustomerWithPassword(
-                                viewModel.formState.email,
-                                viewModel.formState.password
-                            )
-                            CoroutineScope(Dispatchers.Main).launch {
-                                delay(1000)
-                                isLoggedInClicked.value = true
+                                viewModel.findCustomerWithPassword(
+                                    viewModel.formState.email,
+                                    viewModel.formState.password
+                                )
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    delay(1000)
+                                    isLoggedInClicked.value = true
+                                }
                             }
                         }
                     )

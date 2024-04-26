@@ -48,7 +48,7 @@ class CustomerViewModel @Inject constructor(private val customerRepository: Cust
     }
 
     fun findCustomerWithPassword(eMail: String, password: String) = viewModelScope.launch {
-        isValidCustomer = customerRepository.findCustomerWithPassword(eMail, password)
+        isValidCustomer = customerRepository.findCustomerWithPassword(eMail, password) ?: Customer(0, "", "", "","","")
     }
 
     fun getCustomerData(email: String) {
