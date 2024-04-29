@@ -13,3 +13,4 @@ val colorBlack1 = Color(0xE91B1919)
 
 val colorSilver = Color(0xFFD8D8D8)
 val colorAppTheme = Color(0xff3366ff)
+val colorCardBg = Color(0xffcceeff)

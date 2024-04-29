@@ -12,6 +12,7 @@ sealed class Routes(val route : String) {
     data object Home : Routes("Home")
     data object Search : Routes("Search")
     data object Profile : Routes("Profile")
+    data object RecipesByTags : Routes("RecipesByTags")
 
     //Graph Routes
     data object AuthNav : Routes("AUTH_NAV_GRAPH")
