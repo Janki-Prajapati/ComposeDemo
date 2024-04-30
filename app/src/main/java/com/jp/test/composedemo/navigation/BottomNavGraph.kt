@@ -20,7 +20,7 @@ fun HomeNavGraph(
 ) {
     NavHost(
         navController = navController,
-        route = Routes.HomeNav.route,
+        route = Routes.BottomNav.route,
         startDestination = Routes.Home.route
     ) {
 
@@ -34,7 +34,7 @@ fun HomeNavGraph(
             Profile()
         }
         composable(
-            "${Routes.RecipesByTags.route}/ {recipeTag}",
+            "${Routes.RecipesByTags.route}/{recipeTag}",
             arguments = listOf(navArgument("recipeTag") { type = NavType.StringType })
         ) {backStackEntry ->
             // Retrieve the userName parameter from the arguments

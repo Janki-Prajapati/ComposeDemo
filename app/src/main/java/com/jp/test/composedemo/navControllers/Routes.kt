@@ -16,6 +16,7 @@ sealed class Routes(val route : String) {
 
     //Graph Routes
     data object AuthNav : Routes("AUTH_NAV_GRAPH")
-    data object HomeNav : Routes("HOME_NAV_GRAPH")
+    data object BottomNav : Routes("BOTTOM_NAV_GRAPH")
+//    data object HomeNav : Routes("HOME_NAV_GRAPH")
 
 }

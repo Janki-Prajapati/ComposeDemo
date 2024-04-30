@@ -95,7 +95,7 @@ fun Login(navController: NavHostController) {
             )
             isLoggedInClicked.value = false
             isProgressBarVisible.value = false
-            navController.navigate(route = Routes.HomeNav.route)
+            navController.navigate(route = Routes.BottomNav.route)
 
         } else {
             isProgressBarVisible.value = false

@@ -9,6 +9,6 @@ interface ApiService {
 
     @GET("tags")
     suspend fun getRecipesTags() : List<String>
-    @GET("tag/{_tag}")
-    suspend fun getRecipesByTags(@Path(value = "_tag") tag : String) : ApiRecipesFromTags
+    @GET("tag/{tagName}")
+    suspend fun getRecipesByTags(@Path("tagName") tagName : String) : ApiRecipesFromTags
 }

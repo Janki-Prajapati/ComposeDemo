@@ -20,13 +20,13 @@ fun RootNav() {
             Constants.PREF_KEY_IS_LOGGED_IN,
             false
         )
-    ) Routes.HomeNav.route else Routes.AuthNav.route
+    ) Routes.BottomNav.route else Routes.AuthNav.route
 
 
     NavHost(navController = navController, startDestination = currentScreen) {
         AuthNav(navController)
 
-        composable(route = Routes.HomeNav.route) {
+        composable(route = Routes.BottomNav.route) {
             ScreenMain(
                 logout = {
                     navController.navigate(Routes.AuthNav.route) {
