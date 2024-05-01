@@ -24,7 +24,7 @@ fun RootNav() {
 
 
     NavHost(navController = navController, startDestination = currentScreen) {
-        AuthNav(navController)
+        authNav(navController)
 
         composable(route = Routes.BottomNav.route) {
             ScreenMain(

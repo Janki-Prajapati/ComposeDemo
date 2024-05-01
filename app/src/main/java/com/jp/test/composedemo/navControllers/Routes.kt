@@ -13,10 +13,11 @@ sealed class Routes(val route : String) {
     data object Search : Routes("Search")
     data object Profile : Routes("Profile")
     data object RecipesByTags : Routes("RecipesByTags")
+    data object RecipesDetails : Routes("RecipesDetails/{recipeDetails}")
 
     //Graph Routes
     data object AuthNav : Routes("AUTH_NAV_GRAPH")
     data object BottomNav : Routes("BOTTOM_NAV_GRAPH")
-//    data object HomeNav : Routes("HOME_NAV_GRAPH")
+    data object HomeNav : Routes("HOME_NAV_GRAPH/{recipeTag}")
 
 }

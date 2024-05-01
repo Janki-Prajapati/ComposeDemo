@@ -1,5 +1,6 @@
 package com.jp.test.composedemo.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -24,21 +27,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.google.gson.Gson
 import com.jp.test.composedemo.components.ErrorAlertComposable
 import com.jp.test.composedemo.components.ImageFromURLWithPlaceHolder
 import com.jp.test.composedemo.components.LoaderComposable
 import com.jp.test.composedemo.domain.model.ApiRecipesFromTags
+import com.jp.test.composedemo.navControllers.Routes
 import com.jp.test.composedemo.network.ApiState
 import com.jp.test.composedemo.viewmodels.RecipesViewModel
+import java.net.URLEncoder
 
 @Composable
-fun RecipesByTags(recipesViewModel: RecipesViewModel, recipeTag: String?) {
+fun RecipesByTags(
+    recipesViewModel: RecipesViewModel,
+    recipeTag: String?, navController: NavHostController
+) {
 
     val recipesByTagsState = recipesViewModel.recipesByTags.collectAsState()
 
 
     LaunchedEffect(key1 = Unit) {
-        println("recipe tag is from detail screen ==>> $recipeTag")
         recipeTag?.let {
             recipesViewModel.fetchRecipeByTags(it)
         }
@@ -54,7 +64,7 @@ fun RecipesByTags(recipesViewModel: RecipesViewModel, recipeTag: String?) {
             val data = (recipesByTagsState.value as ApiState.Success<ApiRecipesFromTags>).data
             // Display the fetched data using Jetpack Compose components
             data?.let {
-                RenderViewByTag(it)
+                RenderViewByTag(it, navController)
             }
 
         }
@@ -68,7 +78,7 @@ fun RecipesByTags(recipesViewModel: RecipesViewModel, recipeTag: String?) {
 }
 
 @Composable
-fun RenderViewByTag(data: ApiRecipesFromTags) {
+fun RenderViewByTag(data: ApiRecipesFromTags, navController: NavHostController) {
     Column(modifier = Modifier.padding(top = 70.dp)) {
 
         LazyColumn(
@@ -93,17 +103,38 @@ fun RenderViewByTag(data: ApiRecipesFromTags) {
                     ) {
                         data.recipes?.get(it)?.image?.let { it1 ->
 
-                            Row {
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()) {
                                 ImageFromURLWithPlaceHolder(
                                     imageUrl = it1
                                 )
 
                                 Spacer(modifier = Modifier.width(10.dp))
 
-                                Column {
+                                Column(modifier = Modifier
+                                .clickable {
+                                    println(
+                                        "From listing screen details are ==>> ${
+                                            Gson().toJson(
+                                                data.recipes?.get(
+                                                    it
+                                                )
+                                            )
+                                        }"
+                                    )
+
+                                    val recipeDetailsJson = Gson().toJson(data.recipes?.get(it))
+                                    val encodedRecipeDetailsJson = URLEncoder.encode(recipeDetailsJson, "UTF-8")
+                                    val deepLink = Routes.RecipesDetails.route.replace(
+                                        "{recipeDetails}",
+                                        encodedRecipeDetailsJson ?: ""
+                                    )
+                                    navController.navigate(deepLink)
+                                }) {
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
-                                        text =  "Name : ${data.recipes?.get(it)?.name}",
+                                        text = "Name : ${data.recipes?.get(it)?.name}",
                                         fontWeight = FontWeight.Normal,
                                         fontSize = 13.sp,
                                         fontFamily = FontFamily.Serif,
@@ -114,7 +145,7 @@ fun RenderViewByTag(data: ApiRecipesFromTags) {
 
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
-                                        text =  "Cuisine : ${data.recipes?.get(it)?.cuisine}",
+                                        text = "Cuisine : ${data.recipes?.get(it)?.cuisine}",
                                         fontWeight = FontWeight.Normal,
                                         fontSize = 13.sp,
                                         fontFamily = FontFamily.Serif,
@@ -125,7 +156,7 @@ fun RenderViewByTag(data: ApiRecipesFromTags) {
 
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
-                                        text =  "Servings : ${data.recipes?.get(it)?.servings}",
+                                        text = "Servings : ${data.recipes?.get(it)?.servings}",
                                         fontWeight = FontWeight.Normal,
                                         fontSize = 13.sp,
                                         fontFamily = FontFamily.Serif,
@@ -136,7 +167,7 @@ fun RenderViewByTag(data: ApiRecipesFromTags) {
 
                                     Text(
                                         modifier = Modifier.fillMaxWidth(),
-                                        text =  "Difficulty : ${data.recipes?.get(it)?.difficulty}",
+                                        text = "Difficulty : ${data.recipes?.get(it)?.difficulty}",
                                         fontWeight = FontWeight.Normal,
                                         fontSize = 13.sp,
                                         fontFamily = FontFamily.Serif,
@@ -152,45 +183,5 @@ fun RenderViewByTag(data: ApiRecipesFromTags) {
             }
 
         }
-        /* Spacer(modifier = Modifier.height(20.dp))
-
-         LazyVerticalGrid(
-             columns = GridCells.Fixed(2),
-             modifier = Modifier
-                 .fillMaxSize()
-                 .padding(bottom = 80.dp),
-             contentPadding = PaddingValues(7.dp),
-             verticalArrangement = Arrangement.spacedBy(12.dp),
-             horizontalArrangement = Arrangement.spacedBy(12.dp)
-         ) {
-             items(dataList?.size ?: 0) {
-                 Card(
-                     modifier = Modifier.fillMaxWidth(),
-                     shape = RoundedCornerShape(0.dp),
-                     colors = CardDefaults.cardColors(containerColor = colorCardBg),
-                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                     onClick = {
-                         mContext.makeToast("selected tag is ==>> ${dataList?.get(it)}")
-                         navController.navigate(
-                             "${Routes.RecipesByTags.route}/${dataList?.get(it)}")
-                     }
-                 ) {
-                     Column(
-                         modifier = Modifier
-                             .fillMaxWidth()
-                             .padding(5.dp)
-                     ) {
-                         Text(
-                             modifier = Modifier.fillMaxWidth(),
-                             text = dataList?.get(it) ?: "",
-                             fontWeight = FontWeight.Normal,
-                             fontSize = 20.sp,
-                             fontFamily = FontFamily.Serif,
-                             textAlign = TextAlign.Center
-                         )
-                     }
-                 }
-             }
-         }*/
     }
 }

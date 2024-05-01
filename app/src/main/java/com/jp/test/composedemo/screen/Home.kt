@@ -42,8 +42,6 @@ import com.jp.test.composedemo.viewmodels.RecipesViewModel
 fun Home(recipesViewModel: RecipesViewModel, navController: NavHostController) {
 
     val recipesTagsState = recipesViewModel.recipesTags.collectAsState()
-    val mContext = LocalContext.current
-
 
     LaunchedEffect(key1 = Unit) {
         recipesViewModel.fetchRecipeTags()
@@ -59,7 +57,7 @@ fun Home(recipesViewModel: RecipesViewModel, navController: NavHostController) {
         is ApiState.Success -> {
             val dataList = (recipesTagsState.value as ApiState.Success<List<String>>).data
             // Display the fetched data using Jetpack Compose components
-            RenderView(dataList, navController, mContext)
+            RenderView(dataList, navController)
 
         }
 
@@ -72,7 +70,7 @@ fun Home(recipesViewModel: RecipesViewModel, navController: NavHostController) {
 }
 
 @Composable
-fun RenderView(dataList: List<String>?, navController: NavHostController, mContext: Context) {
+fun RenderView(dataList: List<String>?, navController: NavHostController) {
     Column(modifier = Modifier.padding(top = 70.dp)) {
         Text(
             modifier = Modifier
@@ -102,9 +100,7 @@ fun RenderView(dataList: List<String>?, navController: NavHostController, mConte
                     colors = CardDefaults.cardColors(containerColor = colorCardBg),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     onClick = {
-                        mContext.makeToast("selected tag is ==>> ${dataList?.get(it)}")
-                        navController.navigate(
-                            "${Routes.RecipesByTags.route}/${dataList?.get(it)}")
+                        navController.navigate(route = Routes.HomeNav.route.replace("{recipeTag}", dataList?.get(it) ?: ""))
                     }
                 ) {
                     Column(

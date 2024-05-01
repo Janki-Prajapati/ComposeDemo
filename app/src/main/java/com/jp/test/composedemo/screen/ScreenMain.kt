@@ -33,7 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jp.test.composedemo.Constants
 import com.jp.test.composedemo.R
 import com.jp.test.composedemo.bottomnavigationview.BottomNavItem
-import com.jp.test.composedemo.navigation.HomeNavGraph
+import com.jp.test.composedemo.navigation.BottomNavGraph
 import com.jp.test.composedemo.ui.theme.colorAppTheme
 import com.jp.test.composedemo.ui.theme.colorBlue
 import com.jp.test.composedemo.utils.PreferencesManager
@@ -108,38 +108,45 @@ fun ScreenMain(logout: () -> Unit) {
         )
     },
         bottomBar = {
-            NavigationBar(modifier = Modifier.height(65.dp), containerColor = colorAppTheme) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
+            val bottomBarDestination =
+                bottomNavigationItems.any { it.route == currentDestination?.route }
 
-                bottomNavigationItems.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentScreen == item.route,
-                        onClick = {
-                            if (currentScreen != item.route) {
-                                navController.navigate(item.route)
-                            }
-                        },
-                        icon = {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = stringResource(id = item.label)
-                            )
-                        },
-                        label = { Text(stringResource(id = item.label), color = Color.White) },
-                        colors = NavigationBarItemColors(
-                            selectedIconColor = Color.White,
-                            selectedTextColor = Color.White,
-                            disabledIconColor = Color.LightGray,
-                            disabledTextColor = Color.LightGray,
-                            selectedIndicatorColor = Color.Transparent,
-                            unselectedIconColor = Color.LightGray,
-                            unselectedTextColor = Color.LightGray
-                        ),
-                        alwaysShowLabel = false, // This hides the title for the unselected items
-                    )
+            if (bottomBarDestination) {
+                NavigationBar(modifier = Modifier.height(65.dp), containerColor = colorAppTheme) {
+
+                    bottomNavigationItems.forEach { item ->
+                        NavigationBarItem(
+                            selected = currentScreen == item.route,
+                            onClick = {
+                                if (currentScreen != item.route) {
+                                    navController.navigate(item.route)
+                                }
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = stringResource(id = item.label)
+                                )
+                            },
+                            label = { Text(stringResource(id = item.label), color = Color.White) },
+                            colors = NavigationBarItemColors(
+                                selectedIconColor = Color.White,
+                                selectedTextColor = Color.White,
+                                disabledIconColor = Color.LightGray,
+                                disabledTextColor = Color.LightGray,
+                                selectedIndicatorColor = Color.Transparent,
+                                unselectedIconColor = Color.LightGray,
+                                unselectedTextColor = Color.LightGray
+                            ),
+                            alwaysShowLabel = false, // This hides the title for the unselected items
+                        )
+                    }
                 }
             }
         }) {
-        HomeNavGraph(
+        BottomNavGraph(
             navController, recipesViewModel
         )
     }
@@ -150,6 +157,6 @@ fun ScreenMain(logout: () -> Unit) {
 @Composable
 private fun ScreenMainPreview() {
     ScreenMain {
-        
+
     }
 }
