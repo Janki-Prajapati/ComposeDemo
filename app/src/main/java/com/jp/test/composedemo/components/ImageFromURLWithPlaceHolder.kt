@@ -31,3 +31,18 @@ fun ImageFromURLWithPlaceHolder(imageUrl : String) {
 //        colorFilter = ColorFilter.tint(Color.Blue)
     )
 }
+
+@Composable
+fun ImageFromURLWithPlaceHolderDetails(imageUrl : String) {
+    AsyncImage(
+        contentScale = ContentScale.Fit,
+        modifier = Modifier.width(150.dp).height(150.dp),
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUrl)
+            .crossfade(true)
+            .build(),
+        placeholder = painterResource(R.drawable.ic_img_placeholder),
+        contentDescription = stringResource(R.string.app_name)
+//        colorFilter = ColorFilter.tint(Color.Blue)
+    )
+}
