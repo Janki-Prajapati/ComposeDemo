@@ -59,7 +59,7 @@ fun NavGraphBuilder.homeNavGraph(
         composable(route = Routes.RecipesDetails.route) { backStackEntry ->
             val recipeDetailsJson = backStackEntry.arguments?.getString("recipeDetails")
             println("recipe details ==>> $recipeDetailsJson")
-            RecipeDetails(backStackEntry)
+            RecipeDetails(backStackEntry, recipesViewModel)
         }
     }
 }

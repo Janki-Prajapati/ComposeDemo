@@ -59,4 +59,5 @@
     //permission strings
     <string name="strPermission">Permission</string>
     <string name="strTheNotificationIsImportantForThisAppPleaseGrantThePermission">The notification is important for this app. Please grant the permission.</string>
+    <string name="speak">Speak</string>
 </resources>
