@@ -64,7 +64,7 @@ fun RecipesByTags(
             val data = (recipesByTagsState.value as ApiState.Success<ApiRecipesFromTags>).data
             // Display the fetched data using Jetpack Compose components
             data?.let {
-                RenderViewByTag(it, navController)
+                it.recipes?.let { it1 -> RecipeListView(it1, navController,modifier = Modifier.fillMaxSize().padding(top = 70.dp,bottom = 80.dp)) }
             }
 
         }
@@ -73,115 +73,6 @@ fun RecipesByTags(
             val error = (recipesByTagsState.value as ApiState.Error<ApiRecipesFromTags>).message
             // Show error message
             ErrorAlertComposable(error)
-        }
-    }
-}
-
-@Composable
-fun RenderViewByTag(data: ApiRecipesFromTags, navController: NavHostController) {
-    Column(modifier = Modifier.padding(top = 70.dp)) {
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 80.dp),
-            contentPadding = PaddingValues(10.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-
-            items(data.recipes?.size ?: 0) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(0.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(5.dp)
-                    ) {
-                        data.recipes?.get(it)?.image?.let { it1 ->
-
-                            Row(modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight()) {
-                                ImageFromURLWithPlaceHolder(
-                                    imageUrl = it1
-                                )
-
-                                Spacer(modifier = Modifier.width(10.dp))
-
-                                Column(modifier = Modifier
-                                .clickable {
-                                    println(
-                                        "From listing screen details are ==>> ${
-                                            Gson().toJson(
-                                                data.recipes?.get(
-                                                    it
-                                                )
-                                            )
-                                        }"
-                                    )
-
-                                    val recipeDetailsJson = Gson().toJson(data.recipes?.get(it))
-                                    val encodedRecipeDetailsJson = URLEncoder.encode(recipeDetailsJson, "UTF-8")
-                                    val deepLink = Routes.RecipesDetails.route.replace(
-                                        "{recipeDetails}",
-                                        encodedRecipeDetailsJson ?: ""
-                                    )
-                                    navController.navigate(deepLink)
-                                }) {
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        text = "Name : ${data.recipes?.get(it)?.name}",
-                                        fontWeight = FontWeight.Normal,
-                                        fontSize = 13.sp,
-                                        fontFamily = FontFamily.Serif,
-                                        textAlign = TextAlign.Start
-                                    )
-
-                                    Spacer(modifier = Modifier.width(10.dp))
-
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        text = "Cuisine : ${data.recipes?.get(it)?.cuisine}",
-                                        fontWeight = FontWeight.Normal,
-                                        fontSize = 13.sp,
-                                        fontFamily = FontFamily.Serif,
-                                        textAlign = TextAlign.Start
-                                    )
-
-                                    Spacer(modifier = Modifier.width(10.dp))
-
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        text = "Servings : ${data.recipes?.get(it)?.servings}",
-                                        fontWeight = FontWeight.Normal,
-                                        fontSize = 13.sp,
-                                        fontFamily = FontFamily.Serif,
-                                        textAlign = TextAlign.Start
-                                    )
-
-                                    Spacer(modifier = Modifier.width(10.dp))
-
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        text = "Difficulty : ${data.recipes?.get(it)?.difficulty}",
-                                        fontWeight = FontWeight.Normal,
-                                        fontSize = 13.sp,
-                                        fontFamily = FontFamily.Serif,
-                                        textAlign = TextAlign.Start
-                                    )
-                                }
-
-                            }
-
-                        }
-                    }
-                }
-            }
-
         }
     }
 }

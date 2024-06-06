@@ -31,7 +31,7 @@ fun BottomNavGraph(
             Home(recipesViewModel, navController)
         }
         composable(Routes.Search.route) {
-            Search()
+            Search(navController)
         }
         composable(Routes.Profile.route) {
             Profile()

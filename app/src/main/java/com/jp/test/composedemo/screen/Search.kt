@@ -1,41 +1,95 @@
 package com.jp.test.composedemo.screen
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.jp.test.composedemo.R
+import com.jp.test.composedemo.components.CustomTextFieldApp
+import com.jp.test.composedemo.components.LoaderComposable
+import com.jp.test.composedemo.domain.model.ApiRecipesFromTags
+import com.jp.test.composedemo.network.ApiState
+import com.jp.test.composedemo.viewmodels.SearchViewModel
 
 @Composable
-fun Search() {
-    Scaffold { paddingValues ->
-        Column(
+fun Search(navController: NavHostController) {
+    val searchViewModel = hiltViewModel<SearchViewModel>()
+    val searchText by searchViewModel.searchText.collectAsState()
+    val isSearching by searchViewModel.isSearching.collectAsState()
+    val recipeData by searchViewModel.recipeData.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        searchViewModel.recipesFromSearch.collect {
+            when (it) {
+                is ApiState.Loading -> {
+                }
+
+                is ApiState.Success -> {
+                    (it as ApiState.Success<ApiRecipesFromTags>).data?.recipes?.let { data ->
+                        println("Success api call ==>> ${data.size}")
+                        searchViewModel.setRecipeData(data)
+                    }
+                }
+
+                is ApiState.Error -> {
+                    val error = (it as ApiState.Error<ApiRecipesFromTags>).message
+                    // Show error message
+//                    ErrorAlertComposable(error)
+                }
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(top = 70.dp)
+            .fillMaxHeight()
+    ) {
+        CustomTextFieldApp(
+            placeholder = stringResource(id = R.string.strSearchHere),
+            text = searchText,
+            onValueChange = searchViewModel::onSearchTextChanged,
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Search,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Screen Search",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Normal,
-                fontSize = 22.sp,
-                textAlign = TextAlign.Center,
-            )
+                .fillMaxWidth(),
+            singleLine = true,
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .size(20.dp)
+                )
+            }
+        )
+
+        if (!isSearching) {
+            RecipeListView(
+                recipeData, navController = navController, modifier = Modifier.fillMaxSize().padding(bottom = 80.dp))
+
+        } else {
+            LoaderComposable()
         }
 
     }
+
 }
+
