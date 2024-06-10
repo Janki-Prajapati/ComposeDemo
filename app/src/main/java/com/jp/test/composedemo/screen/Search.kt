@@ -62,13 +62,12 @@ fun Search(navController: NavHostController) {
             .fillMaxHeight()
     ) {
         CustomTextFieldApp(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
             placeholder = stringResource(id = R.string.strSearchHere),
             text = searchText,
             onValueChange = searchViewModel::onSearchTextChanged,
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Search,
-            modifier = Modifier
-                .fillMaxWidth(),
             singleLine = true,
             leadingIcon = {
                 Icon(

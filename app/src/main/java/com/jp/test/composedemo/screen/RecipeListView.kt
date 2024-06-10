@@ -1,6 +1,7 @@
 package com.jp.test.composedemo.screen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +18,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -57,23 +59,8 @@ fun RecipeListView(data: List<ApiRecipesFromTags.Recipe?>, navController: NavHos
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-                        ) {
-                            ImageFromURLWithPlaceHolder(
-                                imageUrl = it1
-                            )
-
-                            Spacer(modifier = Modifier.width(10.dp))
-
-                            Column(modifier = Modifier
-                                .clickable {
-                                    println(
-                                        "From listing screen details are ==>> ${
-                                            Gson().toJson(
-                                                data[it]
-                                            )
-                                        }"
-                                    )
-
+                                .clickable(indication = null,
+                                    interactionSource = remember { MutableInteractionSource() })  {
                                     val recipeDetailsJson = Gson().toJson(data[it])
                                     val encodedRecipeDetailsJson =
                                         URLEncoder.encode(recipeDetailsJson, "UTF-8")
@@ -82,7 +69,15 @@ fun RecipeListView(data: List<ApiRecipesFromTags.Recipe?>, navController: NavHos
                                         encodedRecipeDetailsJson ?: ""
                                     )
                                     navController.navigate(deepLink)
-                                }) {
+                                }
+                        ) {
+                            ImageFromURLWithPlaceHolder(
+                                imageUrl = it1
+                            )
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                            Column {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
                                     text = "Name : ${data[it]?.name}",

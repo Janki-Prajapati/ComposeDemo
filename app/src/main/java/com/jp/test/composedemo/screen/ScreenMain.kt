@@ -64,7 +64,7 @@ fun ScreenMain(logout: () -> Unit) {
     Scaffold(topBar = {
 
         TopAppBar(
-            title = { Text(text = currentScreen, fontSize = 18.sp) },
+            title = { Text(text = currentScreen.split("/")[0], fontSize = 18.sp) },
             modifier = Modifier
                 .shadow(
                     3.dp,
